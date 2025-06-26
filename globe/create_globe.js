@@ -165,7 +165,11 @@ function generateSvg(iso3) {
       .attr("fill", d =>
         d.properties.iso3 === iso3 ? "#EF4A60" : "#D1CCCB"
       )
-      .attr("stroke", "none")
+      .attr("stroke", d =>
+        d.properties.iso3 === iso3 ? "#EF4A60" : "#D1CCCB"
+      )
+      .attr("stroke-width", 0.5)
+
       .attr("opacity", 1);
 
   const graticule = d3.geoGraticule().step([30, 30]);
