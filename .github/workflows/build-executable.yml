@@ -32,14 +32,15 @@ jobs:
       - name: Build executable with pkg
         working-directory: globe
         run: |
-          PLATFORM=${{ matrix.runs-on }}
-          case "$PLATFORM" in
-            linux)   TARGET=node18-linux-x64  ;;
-            macos)   TARGET=node18-macos-x64  ;;
-            windows) TARGET=node18-win-x64    ;;
+          RUNNER_OS=${{ matrix.runs-on }}
+          case "$RUNNER_OS" in
+            ubuntu-latest)   PLATFORM=linux   ;;
+            macos-latest)    PLATFORM=macos   ;;
+            windows-latest)  PLATFORM=windows ;;
+            *) echo "Unknown runner OS: $RUNNER_OS"; exit 1 ;;
           esac
           npx pkg create_globe.js \
-            --targets $TARGET \
+            --targets node18-$PLATFORM-x64 \
             --output ../build/create_globe-$PLATFORM$([ "$PLATFORM" = windows ] && echo ".exe")
 
       - name: Upload executable artifact
