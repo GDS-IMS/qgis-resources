@@ -66,6 +66,13 @@ globe> node .\create_globe.js --iso3 ITA --width 400 --height 400 --output my_fo
 ```
 Note that the folder mentioned `output` has to exist.
 
+You can also highlight more than one country by passing a list of countries in the `--iso3` parameter:
+
+```powershell
+globe> node .\create_globe.js --iso3 CIV,GHA --output my_folder/CIV_GHA.svg
+✅  Written: my_folder/CIV_GHA.svg
+```
+
 #### Create globes for all countries
 
 You can also generate globes for all countries (1 file per country).
