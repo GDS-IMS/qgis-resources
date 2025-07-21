@@ -4,7 +4,7 @@ This repo contains QGIS resources used at UNHCR.
 
 ## globe
 
-A CLI tool to generate globes in SVG format highlighting 1 country.
+A CLI tool to generate globes in SVG format highlighting countries.
 
 These globes are used in the QGIS layout to locate the country of the map.
 
