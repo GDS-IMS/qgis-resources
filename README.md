@@ -94,3 +94,7 @@ Use the following syntax:
 ```
 
 Note that the folder mentioned in `outdir` doesn't need to exist, it will be created.
+
+### GitHub Actions
+
+The GitHub action `build-executable.yml` doesn't work.
