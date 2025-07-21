@@ -1,0 +1,49 @@
+name: Build create_globe Executable
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        platform: [linux, macos, windows]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: globe
+        run: npm ci
+
+      - name: Install pkg
+        working-directory: globe
+        run: npm install --no-save pkg
+
+      - name: Build executable with pkg
+        working-directory: globe
+        run: |
+          PLATFORM=${{ matrix.platform }}
+          case "$PLATFORM" in
+            linux)   TARGET=node18-linux-x64  ;;
+            macos)   TARGET=node18-macos-x64  ;;
+            windows) TARGET=node18-win-x64    ;;
+          esac
+          npx pkg create_globe.js \
+            --targets $TARGET \
+            --output ../build/create_globe-$PLATFORM$([ "$PLATFORM" = windows ] && echo ".exe")
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: create_globe-${{ matrix.platform }}
+          path: build/
