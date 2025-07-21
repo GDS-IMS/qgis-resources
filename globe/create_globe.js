@@ -35,7 +35,8 @@
 const fs        = require('fs');
 const path      = require('path');
 const { JSDOM } = require('jsdom');
-const d3        = require('d3');
+const { geoOrthographic, geoPath, geoGraticule, geoBounds } = require('d3-geo');
+const { select } = require('d3-selection');
 const topojson  = require('topojson-client');
 
 // ─── CLI ARGS & HELP ───────────────────────────────────────────────────────────
@@ -132,16 +133,16 @@ function generateSvg(highlightIso3) {
   // highlightIso3: array of codes
   const dom       = new JSDOM(`<!DOCTYPE html><body></body>`);
   const document  = dom.window.document;
-  const projection = d3.geoOrthographic()
+  const projection = geoOrthographic()
     .scale((Math.min(width, height) / 2) - 2)
     .translate([width / 2, height / 2])
     .clipAngle(90);
-  const path = d3.geoPath().projection(projection);
+  const path = geoPath().projection(projection);
 
   // center on bounding box center of all highlights
   const selected = countries.filter(d => highlightIso3.includes(d.properties.iso3));
   if (selected.length) {
-    const bounds = d3.geoBounds({ type: 'FeatureCollection', features: selected });
+    const bounds = geoBounds({ type: 'FeatureCollection', features: selected });
     const [[minLon, minLat], [maxLon, maxLat]] = bounds;
     const centerLon = (minLon + maxLon) / 2;
     const centerLat = (minLat + maxLat) / 2;
@@ -149,7 +150,7 @@ function generateSvg(highlightIso3) {
   }
 
 
-  const svg = d3.select(document.body)
+  const svg = select(document.body)
     .append('svg')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
       .attr('width',  width)
@@ -179,7 +180,7 @@ function generateSvg(highlightIso3) {
       .attr('opacity', 1);
 
   // graticule
-  const graticule = d3.geoGraticule().step([30, 30]);
+  const graticule = geoGraticule().step([30, 30]);
   svg.append('path')
     .datum(graticule)
     .attr('d', path)
